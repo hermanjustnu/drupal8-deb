@@ -39,46 +39,16 @@ override_dh_install:
 	# There are many unneeded extra license files shipped with
 	# Drupal, identical copies of the GPL (or, in two cases, an
 	# empty file, and in two further cases documented in
-	# debian/copyright, the MIT license). Getting rid of them
+	# debian/copyright, the MIT license). The "vendors" directory
+	# (shipped in the sources inside debian/) has also several
+	# copies of the MIT and BSD licenses. Getting rid of them
 	# keeps Lintian happy.
 	find $(DESTDIR)/usr/share/drupal8 -name LICENSE.txt -exec rm \{\} +
+	find $(VENDOR) -name LICENSE* -exec rm \{\} +
 	rm $(COREVENDOR)/ckeditor/LICENSE.md \
 		$(COREVENDOR)/classList/LICENSE.md \
 		$(DESTDIR)/usr/share/drupal8/core/misc/icons/license.md \
 		$(DESTDIR)/usr/share/drupal8/core/themes/stable/images/core/icons/license.md
-
-	# Bundled PHP libraries listed in core/composer.json are
-	# shipped in vendor/; use Debian system-provided ones as much
-	# as possible.
-	#
-	# All of the removed directories NEED to be replaced by a
-	# symlink to the directory where they are provided systemwide
-	# and declared in debian/drupal8.links. Of course, the
-	# corresponding dependency needs to be added to the binary
-	# package.
-	# rm -rf $(VENDOR)/symfony/class-loader \
-	# 	$(VENDOR)/symfony/console \
-	# 	$(VENDOR)/symfony/dependency-injection \
-	# 	$(VENDOR)/symfony/event-dispatcher \
-	# 	$(VENDOR)/symfony/polyfill-mbstring \
-	# 	$(VENDOR)/symfony/polyfill-apcu \
-	# 	$(VENDOR)/symfony/polyfill-iconv \
-	# 	$(VENDOR)/symfony/polyfill-php54 \
-	# 	$(VENDOR)/symfony/polyfill-php55 \
-	# 	$(VENDOR)/symfony/browser-kit \
-	# 	$(VENDOR)/symfony/css-selector/ \
-	# 	$(VENDOR)/symfony/debug \
-	# 	$(VENDOR)/symfony/dependency-injection \
-	# 	$(VENDOR)/symfony/dom-crawler \
-	# 	$(VENDOR)/symfony/event-dispatcher \
-	# 	$(VENDOR)/symfony/http-foundation \
-	# 	$(VENDOR)/symfony/http-kernel \
-	# 	$(VENDOR)/symfony/process \
-	# 	$(VENDOR)/symfony/routing \
-	# 	$(VENDOR)/symfony/serializer \
-	# 	$(VENDOR)/symfony/translation \
-	# 	$(VENDOR)/symfony/validator \
-	# 	$(VENDOR)/symfony/yaml
 
 	# Replace those embedded javascript libraries we can with the
 	# packaged systemwide version. Also, provided in

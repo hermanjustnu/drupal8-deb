@@ -2,7 +2,7 @@ Source: drupal8
 Section: web
 Priority: extra
 Maintainer: Gunnar Wolf <gwolf@debian.org>
-Build-Depends: debhelper (>= 7.0.50~)
+Build-Depends: debhelper (>= 10)
 Homepage: http://www.drupal.org/
 Standards-Version: 3.9.8.0
 Vcs-Git: git://git.debian.org/git/collab-maint/drupal8.git
@@ -49,7 +49,7 @@ Depends: ${misc:Depends},
    php7.0-opcache,
    php7.0-xml,
    wwwconfig-common (>= 0.0.37)
-Recommends: default-mysql-server | postgresql, php-cli
+Recommends: default-mysql-server | postgresql, php-cli,
 Description: fully-featured content management framework
  Drupal is a dynamic web site platform which allows an individual or
  community of users to publish, manage and organize a variety of
