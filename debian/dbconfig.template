@@ -17,7 +17,7 @@
 // the declarations straight into $databases.
 
 $dbs['mysql'] = array(
-                      'driver' => '_DBC_DBTYPE_',
+                      'driver' => 'mysql',
                       'database' => '_DBC_DBNAME_',
                       'username' => '_DBC_DBUSER_',
                       'password' => '_DBC_DBPASS_',
@@ -27,7 +27,7 @@ $dbs['mysql'] = array(
 );
 
 $dbs['pgsql'] = array(
-                      'driver' => '_DBC_DBTYPE_',
+                      'driver' => 'pgsql',
                       'database' => '_DBC_DBNAME_',
                       'username' => '_DBC_DBUSER_',
                       'password' => '_DBC_DBPASS_',
@@ -37,7 +37,7 @@ $dbs['pgsql'] = array(
 );
 
 $dbs['sqlite'] = array(
-                      'driver' => '_DBC_DBTYPE_',
+                      'driver' => 'sqlite',
                       'database' => '_DBC_BASEPATH_/_DBC_DBNAME_',
 );
 
