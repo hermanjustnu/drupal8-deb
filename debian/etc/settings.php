@@ -56,168 +56,184 @@
  * implementations with custom ones.
  */
 
-/**
- * Database settings:
- *
- * The $databases array specifies the database connection or
- * connections that Drupal may use.  Drupal is able to connect
- * to multiple databases, including multiple types of databases,
- * during the same request.
- *
- * One example of the simplest connection array is shown below. To use the
- * sample settings, copy and uncomment the code below between the @code and
- * @endcode lines and paste it after the $databases declaration. You will need
- * to replace the database username and password and possibly the host and port
- * with the appropriate credentials for your database system.
- *
- * The next section describes how to customize the $databases array for more
- * specific needs.
- *
- * @code
- * $databases['default']['default'] = array (
- *   'database' => 'databasename',
- *   'username' => 'sqlusername',
- *   'password' => 'sqlpassword',
- *   'host' => 'localhost',
- *   'port' => '3306',
- *   'driver' => 'mysql',
- *   'prefix' => '',
- *   'collation' => 'utf8mb4_general_ci',
- * );
- * @endcode
- */
- $databases = array();
 
 /**
- * Customizing database settings.
+ * DEBIAN-SPECIFIC CHANGES
  *
- * Many of the values of the $databases array can be customized for your
- * particular database system. Refer to the sample in the section above as a
- * starting point.
- *
- * The "driver" property indicates what Drupal database driver the
- * connection should use.  This is usually the same as the name of the
- * database type, such as mysql or sqlite, but not always.  The other
- * properties will vary depending on the driver.  For SQLite, you must
- * specify a database file name in a directory that is writable by the
- * webserver.  For most other drivers, you must specify a
- * username, password, host, and database name.
- *
- * Transaction support is enabled by default for all drivers that support it,
- * including MySQL. To explicitly disable it, set the 'transactions' key to
- * FALSE.
- * Note that some configurations of MySQL, such as the MyISAM engine, don't
- * support it and will proceed silently even if enabled. If you experience
- * transaction related crashes with such configuration, set the 'transactions'
- * key to FALSE.
- *
- * For each database, you may optionally specify multiple "target" databases.
- * A target database allows Drupal to try to send certain queries to a
- * different database if it can but fall back to the default connection if not.
- * That is useful for primary/replica replication, as Drupal may try to connect
- * to a replica server when appropriate and if one is not available will simply
- * fall back to the single primary server (The terms primary/replica are
- * traditionally referred to as master/slave in database server documentation).
- *
- * The general format for the $databases array is as follows:
- * @code
- * $databases['default']['default'] = $info_array;
- * $databases['default']['replica'][] = $info_array;
- * $databases['default']['replica'][] = $info_array;
- * $databases['extra']['default'] = $info_array;
- * @endcode
- *
- * In the above example, $info_array is an array of settings described above.
- * The first line sets a "default" database that has one primary database
- * (the second level default).  The second and third lines create an array
- * of potential replica databases.  Drupal will select one at random for a given
- * request as needed.  The fourth line creates a new database with a name of
- * "extra".
- *
- * You can optionally set prefixes for some or all database table names
- * by using the 'prefix' setting. If a prefix is specified, the table
- * name will be prepended with its value. Be sure to use valid database
- * characters only, usually alphanumeric and underscore. If no prefixes
- * are desired, leave it as an empty string ''.
- *
- * To have all database names prefixed, set 'prefix' as a string:
- * @code
- *   'prefix' => 'main_',
- * @endcode
- * To provide prefixes for specific tables, set 'prefix' as an array.
- * The array's keys are the table names and the values are the prefixes.
- * The 'default' element is mandatory and holds the prefix for any tables
- * not specified elsewhere in the array. Example:
- * @code
- *   'prefix' => array(
- *     'default'   => 'main_',
- *     'users'     => 'shared_',
- *     'sessions'  => 'shared_',
- *     'role'      => 'shared_',
- *     'authmap'   => 'shared_',
- *   ),
- * @endcode
- * You can also use a reference to a schema/database as a prefix. This may be
- * useful if your Drupal installation exists in a schema that is not the default
- * or you want to access several databases from the same code base at the same
- * time.
- * Example:
- * @code
- *   'prefix' => array(
- *     'default'   => 'main.',
- *     'users'     => 'shared.',
- *     'sessions'  => 'shared.',
- *     'role'      => 'shared.',
- *     'authmap'   => 'shared.',
- *   );
- * @endcode
- * NOTE: MySQL and SQLite's definition of a schema is a database.
- *
- * Advanced users can add or override initial commands to execute when
- * connecting to the database server, as well as PDO connection settings. For
- * example, to enable MySQL SELECT queries to exceed the max_join_size system
- * variable, and to reduce the database connection timeout to 5 seconds:
- * @code
- * $databases['default']['default'] = array(
- *   'init_commands' => array(
- *     'big_selects' => 'SET SQL_BIG_SELECTS=1',
- *   ),
- *   'pdo' => array(
- *     PDO::ATTR_TIMEOUT => 5,
- *   ),
- * );
- * @endcode
- *
- * WARNING: The above defaults are designed for database portability. Changing
- * them may cause unexpected behavior, including potential data loss. See
- * https://www.drupal.org/developing/api/database/configuration for more
- * information on these defaults and the potential issues.
- *
- * More details can be found in the constructor methods for each driver:
- * - \Drupal\Core\Database\Driver\mysql\Connection::__construct()
- * - \Drupal\Core\Database\Driver\pgsql\Connection::__construct()
- * - \Drupal\Core\Database\Driver\sqlite\Connection::__construct()
- *
- * Sample Database configuration format for PostgreSQL (pgsql):
- * @code
- *   $databases['default']['default'] = array(
- *     'driver' => 'pgsql',
- *     'database' => 'databasename',
- *     'username' => 'sqlusername',
- *     'password' => 'sqlpassword',
- *     'host' => 'localhost',
- *     'prefix' => '',
- *   );
- * @endcode
- *
- * Sample Database configuration format for SQLite (sqlite):
- * @code
- *   $databases['default']['default'] = array(
- *     'driver' => 'sqlite',
- *     'database' => '/path/to/databasefilename',
- *   );
- * @endcode
+ * Database configuration will be provided via a separate file, dbconfig.php.
  */
+$databases['default'] = array();
+ require_once('dbconfig.php');
+
+/*
+ * The following section of the upstream configuration file is still
+ * provided as a guide for users needing to customize this further
+ * than what the debconf interface provides for. We double-comment
+ * this just to make it visually clearer.
+ */
+
+/* /\** */
+/*  * Database settings: */
+/*  * */
+/*  * The $databases array specifies the database connection or */
+/*  * connections that Drupal may use.  Drupal is able to connect */
+/*  * to multiple databases, including multiple types of databases, */
+/*  * during the same request. */
+/*  * */
+/*  * One example of the simplest connection array is shown below. To use the */
+/*  * sample settings, copy and uncomment the code below between the @code and */
+/*  * @endcode lines and paste it after the $databases declaration. You will need */
+/*  * to replace the database username and password and possibly the host and port */
+/*  * with the appropriate credentials for your database system. */
+/*  * */
+/*  * The next section describes how to customize the $databases array for more */
+/*  * specific needs. */
+/*  * */
+/*  * @code */
+/*  * $databases['default']['default'] = array ( */
+/*  *   'database' => 'databasename', */
+/*  *   'username' => 'sqlusername', */
+/*  *   'password' => 'sqlpassword', */
+/*  *   'host' => 'localhost', */
+/*  *   'port' => '3306', */
+/*  *   'driver' => 'mysql', */
+/*  *   'prefix' => '', */
+/*  *   'collation' => 'utf8mb4_general_ci', */
+/*  * ); */
+/*  * @endcode */
+/*  *\/ */
+/*   $databases = array(); */
+
+/* /\** */
+/*  * Customizing database settings. */
+/*  * */
+/*  * Many of the values of the $databases array can be customized for your */
+/*  * particular database system. Refer to the sample in the section above as a */
+/*  * starting point. */
+/*  * */
+/*  * The "driver" property indicates what Drupal database driver the */
+/*  * connection should use.  This is usually the same as the name of the */
+/*  * database type, such as mysql or sqlite, but not always.  The other */
+/*  * properties will vary depending on the driver.  For SQLite, you must */
+/*  * specify a database file name in a directory that is writable by the */
+/*  * webserver.  For most other drivers, you must specify a */
+/*  * username, password, host, and database name. */
+/*  * */
+/*  * Transaction support is enabled by default for all drivers that support it, */
+/*  * including MySQL. To explicitly disable it, set the 'transactions' key to */
+/*  * FALSE. */
+/*  * Note that some configurations of MySQL, such as the MyISAM engine, don't */
+/*  * support it and will proceed silently even if enabled. If you experience */
+/*  * transaction related crashes with such configuration, set the 'transactions' */
+/*  * key to FALSE. */
+/*  * */
+/*  * For each database, you may optionally specify multiple "target" databases. */
+/*  * A target database allows Drupal to try to send certain queries to a */
+/*  * different database if it can but fall back to the default connection if not. */
+/*  * That is useful for primary/replica replication, as Drupal may try to connect */
+/*  * to a replica server when appropriate and if one is not available will simply */
+/*  * fall back to the single primary server (The terms primary/replica are */
+/*  * traditionally referred to as master/slave in database server documentation). */
+/*  * */
+/*  * The general format for the $databases array is as follows: */
+/*  * @code */
+/*  * $databases['default']['default'] = $info_array; */
+/*  * $databases['default']['replica'][] = $info_array; */
+/*  * $databases['default']['replica'][] = $info_array; */
+/*  * $databases['extra']['default'] = $info_array; */
+/*  * @endcode */
+/*  * */
+/*  * In the above example, $info_array is an array of settings described above. */
+/*  * The first line sets a "default" database that has one primary database */
+/*  * (the second level default).  The second and third lines create an array */
+/*  * of potential replica databases.  Drupal will select one at random for a given */
+/*  * request as needed.  The fourth line creates a new database with a name of */
+/*  * "extra". */
+/*  * */
+/*  * You can optionally set prefixes for some or all database table names */
+/*  * by using the 'prefix' setting. If a prefix is specified, the table */
+/*  * name will be prepended with its value. Be sure to use valid database */
+/*  * characters only, usually alphanumeric and underscore. If no prefixes */
+/*  * are desired, leave it as an empty string ''. */
+/*  * */
+/*  * To have all database names prefixed, set 'prefix' as a string: */
+/*  * @code */
+/*  *   'prefix' => 'main_', */
+/*  * @endcode */
+/*  * To provide prefixes for specific tables, set 'prefix' as an array. */
+/*  * The array's keys are the table names and the values are the prefixes. */
+/*  * The 'default' element is mandatory and holds the prefix for any tables */
+/*  * not specified elsewhere in the array. Example: */
+/*  * @code */
+/*  *   'prefix' => array( */
+/*  *     'default'   => 'main_', */
+/*  *     'users'     => 'shared_', */
+/*  *     'sessions'  => 'shared_', */
+/*  *     'role'      => 'shared_', */
+/*  *     'authmap'   => 'shared_', */
+/*  *   ), */
+/*  * @endcode */
+/*  * You can also use a reference to a schema/database as a prefix. This may be */
+/*  * useful if your Drupal installation exists in a schema that is not the default */
+/*  * or you want to access several databases from the same code base at the same */
+/*  * time. */
+/*  * Example: */
+/*  * @code */
+/*  *   'prefix' => array( */
+/*  *     'default'   => 'main.', */
+/*  *     'users'     => 'shared.', */
+/*  *     'sessions'  => 'shared.', */
+/*  *     'role'      => 'shared.', */
+/*  *     'authmap'   => 'shared.', */
+/*  *   ); */
+/*  * @endcode */
+/*  * NOTE: MySQL and SQLite's definition of a schema is a database. */
+/*  * */
+/*  * Advanced users can add or override initial commands to execute when */
+/*  * connecting to the database server, as well as PDO connection settings. For */
+/*  * example, to enable MySQL SELECT queries to exceed the max_join_size system */
+/*  * variable, and to reduce the database connection timeout to 5 seconds: */
+/*  * @code */
+/*  * $databases['default']['default'] = array( */
+/*  *   'init_commands' => array( */
+/*  *     'big_selects' => 'SET SQL_BIG_SELECTS=1', */
+/*  *   ), */
+/*  *   'pdo' => array( */
+/*  *     PDO::ATTR_TIMEOUT => 5, */
+/*  *   ), */
+/*  * ); */
+/*  * @endcode */
+/*  * */
+/*  * WARNING: The above defaults are designed for database portability. Changing */
+/*  * them may cause unexpected behavior, including potential data loss. See */
+/*  * https://www.drupal.org/developing/api/database/configuration for more */
+/*  * information on these defaults and the potential issues. */
+/*  * */
+/*  * More details can be found in the constructor methods for each driver: */
+/*  * - \Drupal\Core\Database\Driver\mysql\Connection::__construct() */
+/*  * - \Drupal\Core\Database\Driver\pgsql\Connection::__construct() */
+/*  * - \Drupal\Core\Database\Driver\sqlite\Connection::__construct() */
+/*  * */
+/*  * Sample Database configuration format for PostgreSQL (pgsql): */
+/*  * @code */
+/*  *   $databases['default']['default'] = array( */
+/*  *     'driver' => 'pgsql', */
+/*  *     'database' => 'databasename', */
+/*  *     'username' => 'sqlusername', */
+/*  *     'password' => 'sqlpassword', */
+/*  *     'host' => 'localhost', */
+/*  *     'prefix' => '', */
+/*  *   ); */
+/*  * @endcode */
+/*  * */
+/*  * Sample Database configuration format for SQLite (sqlite): */
+/*  * @code */
+/*  *   $databases['default']['default'] = array( */
+/*  *     'driver' => 'sqlite', */
+/*  *     'database' => '/path/to/databasefilename', */
+/*  *   ); */
+/*  * @endcode */
+/*  *\/ */
 
 /**
  * Location of the site configuration files.

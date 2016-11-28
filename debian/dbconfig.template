@@ -1,7 +1,7 @@
 <?php
 //
 // database access settings in php format
-// automatically generated from /etc/dbconfig-common/drupal7.conf
+// automatically generated from /etc/dbconfig-common/drupal8.conf
 // by /usr/sbin/dbconfig-generate-include
 //
 // by default this file is managed via ucf, so you shouldn't have to
