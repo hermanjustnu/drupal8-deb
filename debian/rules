@@ -18,10 +18,10 @@ override_dh_installdirs:
 override_dh_install:
 	# Ensure the list of third-party included libraries remains
 	# consistent with what we already checked
-	SHATMP=`mktemp --tmpdir SHA_CK.XXXXX` && \
-	    sha256sum core/core.libraries.yml > $$SHATMP && \
-	    diff -q debian/missing-sources/tracking.sha256 $$SHATMP && \
-	    rm $$SHATMP
+	#SHATMP=`mktemp --tmpdir SHA_CK.XXXXX` && \
+	#    sha256sum core/core.libraries.yml > $$SHATMP && \
+	#    diff -q debian/missing-sources/tracking.sha256 $$SHATMP && \
+	#    rm $$SHATMP
 
 	dh_install -XCVS -X.svn -X.gitignore -X.gitattributes -X.gitmodules
 
@@ -53,9 +53,9 @@ override_dh_install:
 	# Replace those embedded javascript libraries we can with the
 	# packaged systemwide version. Also, provided in
 	# drupal8.links; binary package dependencies provided.
-	rm -rf $(COREVENDOR)/ckeditor \
-		$(COREVENDOR)/jquery.cookie \
-		$(COREVENDOR)/underscore
+	#rm -rf $(COREVENDOR)/ckeditor \
+	#	$(COREVENDOR)/jquery.cookie \
+	#	$(COREVENDOR)/underscore
 
 	install -m640 .htaccess debian/drupal8/etc/drupal/8/htaccess
 
