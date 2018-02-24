@@ -41,6 +41,6 @@ $dbs['sqlite'] = array(
                       'database' => '_DBC_BASEPATH_/_DBC_DBNAME_',
 );
 
-$databases['default']['default'] = $dbs['_DBC_DBTYPE_'];
+$databases['default'] = $dbs['_DBC_DBTYPE_'];
 
 ?>
