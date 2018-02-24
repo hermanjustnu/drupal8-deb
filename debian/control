@@ -11,18 +11,19 @@ Vcs-Browser: https://alioth.debian.org/anonscm/git/collab-maint/drupal8.git
 Package: drupal8
 Architecture: all
 Depends: ${misc:Depends},
-   apache2 | httpd,
    curl,
    dbconfig-common,
    dbconfig-mysql | dbconfig-pgsql | dbconfig-sqlite3 | dbconfig-no-thanks,
    default-mta | mail-transport-agent,
    default-mysql-client | virtual-mysql-client | postgresql-client | sqlite3,
-   php,
-   php-composer-semver (>= 1.0),
-   php7.0-opcache,
-   php7.0-xml,
+   php (>=5.5.9),
+   php-gd,
+   php-mysql | php-sqlite3 | php-pgsql,
+   php-opcache,
+   php-xml,
    wwwconfig-common (>= 0.0.37)
-Recommends: default-mysql-server | postgresql, php-cli, php-fpm
+Recommends: apache2 | nginx | httpd,
+   default-mysql-server | postgresql, php-cli, php-fpm
 Description: fully-featured content management framework
  Drupal is a dynamic web site platform which allows an individual or
  community of users to publish, manage and organize a variety of
